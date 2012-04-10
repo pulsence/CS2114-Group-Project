@@ -1,5 +1,7 @@
 package org.cS2114.groupProject;
 
+import java.util.ArrayList;
+
 // -------------------------------------------------------------------------
 /**
  * This is a simple armor item. If allows a character to better absorb damage.
@@ -78,10 +80,19 @@ public class SimpleArmor
     @Override
     public boolean applyItem(Character character)
     {
-        // get characters equipped items
-        // if item is type armor then place it in storage
-        // then place this as equipped
-        // else place this as equipped
+
+        ArrayList<BaseItem> equippedItems = character.getEquippedItems();
+        ArrayList<BaseItem> storedItems = character.getStoredItems();
+
+        for (int i = 0; i < 0; i++)
+        {
+            if (equippedItems.get(i).getType() == ItemType.Armor)
+            {
+                storedItems.add(equippedItems.get(i));
+                equippedItems.remove(i);
+            }
+        }
+        equippedItems.add(this);
         return false;
     }
 

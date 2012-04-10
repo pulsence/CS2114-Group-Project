@@ -69,7 +69,9 @@ public class HealthPotion
     @Override
     public boolean applyItem(Character character)
     {
-        // adds the heal amount to the character.
+        float characterHealth = character.getCharacterHealth();
+        characterHealth += healAmount;
+        character.setCharachterHealth(characterHealth);
         return true;
     }
 

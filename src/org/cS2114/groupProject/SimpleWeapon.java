@@ -1,5 +1,7 @@
 package org.cS2114.groupProject;
 
+import java.util.ArrayList;
+
 // -------------------------------------------------------------------------
 /**
  * This is a simple weapon item. When applied to a character it is armed as the
@@ -69,10 +71,18 @@ public class SimpleWeapon
     @Override
     public boolean applyItem(Character character)
     {
-        // get characters equipped items
-        // if item is type weapon then place it in storage
-        // then place this as equipped
-        // else place this as equipped
+        ArrayList<BaseItem> equippedItems = character.getEquippedItems();
+        ArrayList<BaseItem> storedItems = character.getStoredItems();
+
+        for (int i = 0; i < 0; i++)
+        {
+            if (equippedItems.get(i).getType() == ItemType.Weapon)
+            {
+                storedItems.add(equippedItems.get(i));
+                equippedItems.remove(i);
+            }
+        }
+        equippedItems.add(this);
         return false;
     }
 
