@@ -27,9 +27,11 @@ public class FightAction
      *
      * @param enemy
      *            The enemy that this action will fight against.
+     * @precondition the enemy must be able to fight.
      */
     public FightAction(NPC enemy)
     {
+        assert enemy.canFight();
         this.enemy = enemy;
     }
 

@@ -1,8 +1,8 @@
 package org.cS2114.groupProject;
 
-import org.cS2114.groupProject.actions.BaseAction;
 import java.util.ArrayList;
 import java.util.Observable;
+import org.cS2114.groupProject.actions.BaseAction;
 
 // -------------------------------------------------------------------------
 /**
@@ -11,7 +11,8 @@ import java.util.Observable;
  * @author Tim Eck II (etimot2)
  * @version Apr 16, 2012
  */
-public class Room extends Observable
+public class Room
+    extends Observable
 {
     private ArrayList<BaseAction> hiddenActions;
     private ArrayList<BaseAction> currentActions;
@@ -29,8 +30,8 @@ public class Room extends Observable
         hiddenActions = new ArrayList<BaseAction>();
         currentActions = new ArrayList<BaseAction>();
         mainCharacter = new Character();
-        setNpcs(new ArrayList<NPC>());
-        setLinkedRooms(new Room[4]);
+        npcs = new ArrayList<NPC>();
+        linkedRooms = new Room[4];
     }
 
 
@@ -148,5 +149,24 @@ public class Room extends Observable
     {
         currentActions.addAll(hiddenActions);
         hiddenActions.clear();
+    }
+
+
+    /**
+     * Tells the room that an action has requested that it change to a new room.
+     * The objects observing this class will be notified and passed the int
+     * value for the next room to go to.
+     *
+     * @param nextRoom
+     *            The next room to go to.
+     */
+    public void changeRoom(int nextRoom)
+    {
+        if (nextRoom < 0 || nextRoom > 3)
+        {
+            return;
+        }
+        setChanged();
+        notifyObservers(nextRoom);
     }
 }
