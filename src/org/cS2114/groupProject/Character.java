@@ -1,6 +1,7 @@
 package org.cS2114.groupProject;
 
 import java.util.ArrayList;
+import org.cS2114.groupProject.items.BaseItem;
 
 /**
  * This is the character class includes Name, StoredItems, Equipped Items
@@ -13,9 +14,10 @@ public class Character
 {
 
     // the character health
-    private float                         characterHealth;
+    private float               characterHealth;
     private ArrayList<BaseItem> storedItems;
     private ArrayList<BaseItem> equippedItems;
+    private String              characterName;
 
 
     /**
@@ -26,6 +28,7 @@ public class Character
         characterHealth = 100f;
         storedItems = new ArrayList<BaseItem>();
         equippedItems = new ArrayList<BaseItem>();
+        characterName = "Un-named character";
     }
 
 
@@ -48,7 +51,7 @@ public class Character
      * @param characterHealth
      *            the charachterHealth to set
      */
-    public void setCharachterHealth(float characterHealth)
+    public void setCharacterHealth(float characterHealth)
     {
         this.characterHealth = characterHealth;
     }
@@ -73,6 +76,26 @@ public class Character
     public ArrayList<BaseItem> getEquippedItems()
     {
         return equippedItems;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * @return the characterName
+     */
+    public String getCharacterName()
+    {
+        return characterName;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * @param characterName the characterName to set
+     */
+    public void setCharacterName(String characterName)
+    {
+        this.characterName = characterName;
     }
 
 }

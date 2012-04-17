@@ -1,4 +1,6 @@
-package org.cS2114.groupProject;
+package org.cS2114.groupProject.items;
+
+import org.cS2114.groupProject.Character;
 
 // -------------------------------------------------------------------------
 /**
@@ -71,7 +73,7 @@ public class HealthPotion
     {
         float characterHealth = character.getCharacterHealth();
         characterHealth += healAmount;
-        character.setCharachterHealth(characterHealth);
+        character.setCharacterHealth(characterHealth);
         return true;
     }
 

@@ -1,4 +1,4 @@
-package org.cS2114.groupProject;
+package org.cS2114.groupProject.items;
 
 // -------------------------------------------------------------------------
 /**
