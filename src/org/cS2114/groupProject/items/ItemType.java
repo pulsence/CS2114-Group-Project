@@ -4,7 +4,9 @@ package org.cS2114.groupProject.items;
 /**
  * Defines the class of that a specific item falls into.
  *
+ * @author Sean Meacham (sean22)
  * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version 2012.4.9
  */
 public enum ItemType

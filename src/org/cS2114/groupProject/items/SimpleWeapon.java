@@ -1,17 +1,18 @@
 package org.cS2114.groupProject.items;
 
-import org.cS2114.groupProject.Character;
 import java.util.ArrayList;
+import org.cS2114.groupProject.Character;
 
 // -------------------------------------------------------------------------
 /**
  * This is a simple weapon item. When applied to a character it is armed as the
  * character main weapon.
  *
+ * @author Sean Meacham (sean22)
  * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version 2012.4.9
  */
-
 public class SimpleWeapon
     extends BaseItem
 {

@@ -1,16 +1,17 @@
 package org.cS2114.groupProject.items;
 
-import org.cS2114.groupProject.Character;
 import java.util.ArrayList;
+import org.cS2114.groupProject.Character;
 
 // -------------------------------------------------------------------------
 /**
  * This is a simple armor item. If allows a character to better absorb damage.
  *
+ * @author Sean Meacham (sean22)
  * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version 2012.4.9
  */
-
 public class SimpleArmor
     extends BaseItem
 {

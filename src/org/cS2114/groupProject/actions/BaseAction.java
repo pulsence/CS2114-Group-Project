@@ -6,10 +6,11 @@ import org.cS2114.groupProject.Room;
 /**
  * Abstract class that is the base for all actions.
  *
- * @author Tim Eck II (etimot2)
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version Apr 16, 2012
  */
-
 public abstract class BaseAction
 {
     private String actionName;

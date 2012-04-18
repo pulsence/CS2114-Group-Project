@@ -6,15 +6,20 @@ import student.TestCase;
 
 // -------------------------------------------------------------------------
 /**
- *  The main activity for the game.
+ * The main activity for the game.
  *
- *  @author Tim Eck (etimot2)
- *  @version 2012.04.07
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
+ * @version 2012.04.07
  */
-public class GroupProjectActivity extends Activity {
+public class GroupProjectActivity
+    extends Activity
+{
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 

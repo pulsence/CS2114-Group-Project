@@ -7,10 +7,11 @@ import org.cS2114.groupProject.Character;
  * This object will heal characters when it is applied. However once applied it
  * should be destroyed and removed from the characters inventory.
  *
+ * @author Sean Meacham (sean22)
  * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version 2012.4.9
  */
-
 public class HealthPotion
     extends BaseItem
 {

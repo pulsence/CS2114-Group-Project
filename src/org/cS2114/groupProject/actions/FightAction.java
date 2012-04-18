@@ -12,7 +12,9 @@ import org.cS2114.groupProject.items.SimpleWeapon;
 /**
  * Simple action class that allows the user to fight an enemy.
  *
- * @author Tim Eck II (etimot2)
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version Apr 16, 2012
  */
 public class FightAction

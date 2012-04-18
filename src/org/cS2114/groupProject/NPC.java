@@ -2,13 +2,13 @@ package org.cS2114.groupProject;
 
 // -------------------------------------------------------------------------
 /**
- * Write a one-sentence summary of your class here. Follow it with additional
- * details about its purpose, what abstraction it represents, and how to use it.
+ * NPC class that represents non player characters.
  *
- * @author Sean Meacham
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version Apr 10, 2012
  */
-
 public class NPC
     extends Character
 {

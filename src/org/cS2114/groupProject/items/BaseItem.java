@@ -6,7 +6,9 @@ import org.cS2114.groupProject.Character;
 /**
  * The base of all items. An item can effect stats of a character.
  *
+ * @author Sean Meacham (sean22)
  * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version 2012.4.9
  */
 public abstract class BaseItem

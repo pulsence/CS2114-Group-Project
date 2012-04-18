@@ -8,7 +8,9 @@ import org.cS2114.groupProject.actions.BaseAction;
 /**
  * Room class. This is the base data type that will be used to build the levels.
  *
- * @author Tim Eck II (etimot2)
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version Apr 16, 2012
  */
 public class Room

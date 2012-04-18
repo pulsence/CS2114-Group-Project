@@ -9,7 +9,9 @@ import org.cS2114.groupProject.items.BaseItem;
 /**
  * Applies an item to the main character.
  *
- * @author Tim Eck II (etimot2)
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version Apr 17, 2012
  */
 public class ApplyItemAction

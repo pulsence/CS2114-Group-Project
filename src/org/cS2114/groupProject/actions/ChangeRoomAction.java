@@ -6,7 +6,9 @@ import org.cS2114.groupProject.Room;
 /**
  * Tells the game to update the room that the main character is currently in.
  *
- * @author Tim Eck II (etimot2)
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version Apr 17, 2012
  */
 public class ChangeRoomAction

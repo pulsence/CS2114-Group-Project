@@ -6,10 +6,11 @@ import org.cS2114.groupProject.Room;
 /**
  * Explores the room so that all the hidden actions are now available.
  *
- * @author Tim Eck II (etimot2)
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version Apr 17, 2012
  */
-
 public class SearchAction
     extends BaseAction
 {

@@ -6,10 +6,11 @@ import org.cS2114.groupProject.items.BaseItem;
 /**
  * This is the character class includes Name, StoredItems, Equipped Items
  *
- * @author Nate
+ * @author Sean Meacham (sean22)
+ * @author Tim Eck (etimot2)
+ * @author Nate Tucker (imtucker)
  * @version 2012.4.10
  */
-
 public class Character
 {
 
