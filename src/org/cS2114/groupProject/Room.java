@@ -21,6 +21,7 @@ public class Room
     private Character             mainCharacter;
     private ArrayList<NPC>        npcs;
     private Room[]                linkedRooms;
+    private boolean               explored;
 
 
     // ----------------------------------------------------------
@@ -34,6 +35,7 @@ public class Room
         mainCharacter = new Character();
         npcs = new ArrayList<NPC>();
         linkedRooms = new Room[4];
+        explored = false;
     }
 
 
@@ -55,6 +57,16 @@ public class Room
     public void setCurrentActions(ArrayList<BaseAction> currentActions)
     {
         this.currentActions = currentActions;
+    }
+
+    public boolean getRoomState()
+    {
+        return explored;
+    }
+
+    public void setRoomState()
+    {
+        explored = true;
     }
 
 

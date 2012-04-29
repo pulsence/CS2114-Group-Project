@@ -1,5 +1,7 @@
 package org.cS2114.groupProject;
 
+import org.cS2114.groupProject.items.BaseItem;
+import android.content.Intent;
 import android.widget.TextView;
 import org.cS2114.groupProject.actions.ApplyItemAction;
 import org.cS2114.groupProject.actions.ChangeRoomAction;
@@ -40,6 +42,7 @@ public class GroupProjectActivity
     private TextView         mainCharHP;
     private TextView         mainCharDEF;
     private TextView         mainCharATT;
+    private NPC              npc1;
 
 
     /** Called when the activity is first created. */
@@ -49,8 +52,20 @@ public class GroupProjectActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        if (curRoom == null)
+        {
+            initRoom = new Room();
+            curRoom = initRoom;
+        }
+
+        mainChar = new Character();
+        npc1 = new NPC();
+        npc1.setMessage("Remember to explore the room first!");
+        mainChar.setCharacterName("Main Character");
+        initRoom.setMainCharacter(mainChar);
+
         TextView mainCharHP = (TextView)findViewById(R.id.mainCharHP);
-        mainCharHP.setText("HP: ");
+        mainCharHP.setText("HP: " + mainChar.getCharacterHealth());
 
         TextView mainCharDEF = (TextView)findViewById(R.id.mainCharDEF);
         mainCharDEF.setText("DEF: ");
@@ -69,13 +84,16 @@ public class GroupProjectActivity
         spinner1.setAdapter(adapter);
         spinner1.setOnItemSelectedListener(new MyOnItemSelectedListener());
 
+        String secondarySpinner[] = new String[] { "Please select an action." };
+
         Spinner spinner2 = (Spinner)findViewById(R.id.spinner2);
-        ArrayAdapter<CharSequence> adapter2 =
-            ArrayAdapter.createFromResource(
+        ArrayAdapter<String> adapter2 =
+            new ArrayAdapter<String>(
                 this,
-                R.array.action_Array,
-                android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                android.R.layout.simple_spinner_item,
+                secondarySpinner);
+        adapter
+            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
         spinner2.setOnItemSelectedListener(new MyOnItemSelectedListener());
 
@@ -98,13 +116,6 @@ public class GroupProjectActivity
     }
 
 
-    public void changeRoom()
-    {
-        changeRoom = new ChangeRoomAction(1);
-        changeRoom.applyAction(curRoom);
-    }
-
-
     /**
      * // ----------------------------------------------------------------------
      * --- /** Nested class to set OnClickListeners to the data items in the
@@ -124,24 +135,62 @@ public class GroupProjectActivity
             int pos,
             long id)
         {
-
-            if (!exploreRoom)
+            if (!curRoom.getRoomState())
             {
                 Toast.makeText(
                     parent.getContext(),
-                    parent.getItemAtPosition(pos).toString(),
+                    "You must explore the room first",
                     Toast.LENGTH_LONG).show();
             }
-            /*
-             * if(parent.getItemAtPosition(pos).toString() == "Explore Room") {
-             * exploreRoom = true; Toast.makeText( parent.getContext(),
-             * "You have explored the room!", Toast.LENGTH_LONG).show(); return;
-             * } Toast.makeText( parent.getContext(),
-             * "You must first explore the room!", Toast.LENGTH_LONG).show(); }
-             * else if (parent.getItemAtPosition(pos).toString() ==
-             * "Explore the Room") { search.applyAction(curRoom); exploreRoom =
-             * true; }
-             */
+
+            if (pos == 0)
+            {
+                SearchAction search = new SearchAction();
+                search.applyAction(curRoom);
+                curRoom.setRoomState();
+                Toast.makeText(
+                    parent.getContext(),
+                    "The room has now been explored.",
+                    Toast.LENGTH_LONG).show();
+
+                // Creates a string for
+                String[] npcs = new String[curRoom.getNpcs().size()];
+
+                for(int i = 0; i < curRoom.getNpcs().size(); i++)
+                {
+                    String value = null;
+                    value = curRoom.getNpcs().get(i).toString();
+                    npcs[i] = value;
+                }
+
+
+            }
+
+            if (pos == 1)
+            {
+                FightAction fight = new FightAction(npc1);
+                fight.applyAction(curRoom);
+                updateStatusBars();
+            }
+
+            if (pos == 2)
+            {
+                int index = 0;
+                changeRoom = new ChangeRoomAction(index);
+                changeRoom.applyAction(curRoom);
+            }
+
+            if (pos == 3)
+            {
+                Toast.makeText(parent.getContext(),
+                    npc1.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+            if (pos == 4)
+            {
+
+                //ApplyItemAction applyItem = new ApplyActionItem(item);
+            }
         }
 
 
@@ -149,11 +198,20 @@ public class GroupProjectActivity
         {
             // Do nothing.
         }
+
     }
 
 
-    public void updateStatusBar()
+    public void updateStatusBars()
     {
+        mainCharHP
+            .setText("" + curRoom.getMainCharacter().getCharacterHealth());
 
+        mainCharDEF.setText(""
+            + curRoom.getMainCharacter().getCharacterHealth());
+
+        mainCharHP
+            .setText("" + curRoom.getMainCharacter().getCharacterHealth());
     }
+
 }
