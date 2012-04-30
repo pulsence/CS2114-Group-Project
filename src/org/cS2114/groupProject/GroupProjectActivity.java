@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.util.Observable;
 import java.util.Observer;
 import org.cS2114.groupProject.actions.BaseAction;
+import org.cS2114.groupProject.actions.ChangeRoomAction;
 import org.cS2114.groupProject.actions.FightAction;
 import org.cS2114.groupProject.actions.SearchAction;
 import org.cS2114.groupProject.actions.TalkAction;
@@ -78,7 +79,23 @@ public class GroupProjectActivity
     {
         room = new Room();
         room.addObserver(new RoomObserver());
+        Room roomNorth = new Room();
+        roomNorth.addObserver(new RoomObserver());
+        Room roomSouth = new Room();
+        roomSouth.addObserver(new RoomObserver());
+        Room roomEast = new Room();
+        roomEast.addObserver(new RoomObserver());
+        Room roomWest = new Room();
+        roomWest.addObserver(new RoomObserver());
 
+        Room[] newLinkedRooms = room.getLinkedRooms();
+        newLinkedRooms[0] = roomNorth;
+        newLinkedRooms[1] = roomEast;
+        newLinkedRooms[2] = roomSouth;
+        newLinkedRooms[3] = roomWest;
+        room.setLinkedRooms(newLinkedRooms);
+
+        // Center room
         Character mainChar = new Character();
         mainChar.setCharacterName("Main Character");
         SimpleWeapon weapon = new SimpleWeapon();
@@ -102,8 +119,63 @@ public class GroupProjectActivity
         npc.getEquippedItems().add(armor);
         room.getNpcs().add(npc);
         room.getHiddenActions().add(new FightAction(npc));
-
+        room.getHiddenActions().add(new ChangeRoomAction(0));
+        room.getHiddenActions().add(new ChangeRoomAction(1));
+        room.getHiddenActions().add(new ChangeRoomAction(2));
+        room.getHiddenActions().add(new ChangeRoomAction(3));
         room.getCurrentActions().add(new SearchAction());
+
+        // East room
+        NPC npcEast = new NPC();
+        npcEast.setCharacterName("Eastern Sage");
+        npcEast.setMessage("Remember to explore the room first!");
+        roomEast.getNpcs().add(npcEast);
+
+        npcEast = new NPC();
+        npcEast.setCharacterName("Big Warrior");
+        weapon = new SimpleWeapon();
+        weapon.setDamage(7);
+        npcEast.setCharacterHealth(40);
+        npcEast.getEquippedItems().add(weapon);
+        roomEast.getNpcs().add(npcEast);
+
+        roomEast.getHiddenActions().add(new FightAction(npcEast));
+        roomEast.getCurrentActions().add(new TalkAction(npcEast));
+        roomEast.getCurrentActions().add(new ChangeRoomAction(3));
+        roomEast.getCurrentActions().add(new SearchAction());
+        roomEast.getLinkedRooms()[3] = room;
+
+        // West room
+        NPC npcWest = new NPC();
+        npcWest.setCharacterName("Western Sage");
+        npcWest.setMessage("Remember to explore the room first!");
+        roomWest.getNpcs().add(npcWest);
+        roomWest.getCurrentActions().add(new TalkAction(npcWest));
+        roomWest.getCurrentActions().add(new ChangeRoomAction(1));
+        roomWest.getLinkedRooms()[1] = room;
+
+        // North room
+        NPC npcNorth = new NPC();
+        npcNorth.setCharacterName("Northern Sage");
+        npcNorth.setMessage("Remember to explore the room first!");
+        roomNorth.getNpcs().add(npcNorth);
+        roomNorth.getCurrentActions().add(new TalkAction(npcNorth));
+        roomNorth.getCurrentActions().add(new ChangeRoomAction(2));
+        newLinkedRooms = roomNorth.getLinkedRooms();
+        newLinkedRooms[0] = null;
+        newLinkedRooms[1] = null;
+        newLinkedRooms[2] = room;
+        newLinkedRooms[3] = null;
+        roomNorth.setLinkedRooms(newLinkedRooms);
+
+        // South room
+        NPC npcSouth = new NPC();
+        npcSouth.setCharacterName("Southern Sage");
+        npcSouth.setMessage("Remember to explore the room first!");
+        roomSouth.getNpcs().add(npcSouth);
+        roomSouth.getCurrentActions().add(new TalkAction(npcSouth));
+        roomSouth.getCurrentActions().add(new ChangeRoomAction(0));
+        roomSouth.getLinkedRooms()[0] = room;
     }
 
 
@@ -126,7 +198,6 @@ public class GroupProjectActivity
 
     private void buildStoredItemList()
     {
-
         ArrayAdapter<String> adapter =
             new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
@@ -289,16 +360,21 @@ public class GroupProjectActivity
             Room tempRoom = (Room)observered;
             if (tempRoom.hasMessage())
             {
-                Toast.makeText(context, tempRoom.getMessage(), Toast.LENGTH_LONG)
-                    .show();
+                Toast.makeText(
+                    context,
+                    tempRoom.getMessage(),
+                    Toast.LENGTH_LONG).show();
                 tempRoom.eraseMessage();
             }
-            else if(tempRoom.shouldChangeRoom())
+            else if (tempRoom.shouldChangeRoom())
             {
+
                 room = tempRoom.getLinkedRooms()[(Integer)param];
                 room.setMainCharacter(tempRoom.getMainCharacter());
-                tempRoom.setMainCharacter(null);
                 room.addObserver(new RoomObserver());
+                buildActionList();
+                buildStoredItemList();
+                updateStatusBars();
             }
         }
 

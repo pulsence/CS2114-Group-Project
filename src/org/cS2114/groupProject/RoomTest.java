@@ -169,13 +169,4 @@ public class RoomTest
         assertEquals(2, room.getCurrentActions().size());
     }
 
-
-    /**
-     * Test method for {@link org.cS2114.groupProject.Room#changeRoom(int)}.
-     */
-    public void testChangeRoom()
-    {
-        fail("Not yet implemented");
-    }
-
 }
