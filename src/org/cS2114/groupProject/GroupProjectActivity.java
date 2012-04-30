@@ -286,11 +286,19 @@ public class GroupProjectActivity
     {
         public void update(Observable observered, Object param)
         {
-            if (room.hasMessage())
+            Room tempRoom = (Room)observered;
+            if (tempRoom.hasMessage())
             {
-                Toast.makeText(context, room.getMessage(), Toast.LENGTH_LONG)
+                Toast.makeText(context, tempRoom.getMessage(), Toast.LENGTH_LONG)
                     .show();
-                room.eraseMessage();
+                tempRoom.eraseMessage();
+            }
+            else if(tempRoom.shouldChangeRoom())
+            {
+                room = tempRoom.getLinkedRooms()[(Integer)param];
+                room.setMainCharacter(tempRoom.getMainCharacter());
+                tempRoom.setMainCharacter(null);
+                room.addObserver(new RoomObserver());
             }
         }
 
