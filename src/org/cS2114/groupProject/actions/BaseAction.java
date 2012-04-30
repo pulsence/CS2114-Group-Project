@@ -93,7 +93,7 @@ public abstract class BaseAction
      *
      * @param room
      *            to apply the action too.
-     * @return false if the action should be removed.
+     * @return true if the action should be removed.
      */
     public abstract boolean applyAction(Room room);
 }

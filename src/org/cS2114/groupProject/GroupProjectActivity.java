@@ -1,22 +1,25 @@
 package org.cS2114.groupProject;
 
-import org.cS2114.groupProject.items.BaseItem;
-import android.content.Intent;
-import android.widget.TextView;
-import org.cS2114.groupProject.actions.ApplyItemAction;
-import org.cS2114.groupProject.actions.ChangeRoomAction;
-import org.cS2114.groupProject.actions.FightAction;
-import org.cS2114.groupProject.actions.SearchAction;
-import java.util.ArrayList;
-import android.widget.Toast;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.app.Activity;
-import android.os.Bundle;
-import student.TestCase;
+import android.widget.TextView;
+import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+import org.cS2114.groupProject.actions.BaseAction;
+import org.cS2114.groupProject.actions.FightAction;
+import org.cS2114.groupProject.actions.SearchAction;
+import org.cS2114.groupProject.actions.TalkAction;
+import org.cS2114.groupProject.items.BaseItem;
+import org.cS2114.groupProject.items.SimpleArmor;
+import org.cS2114.groupProject.items.SimpleWeapon;
 
 // -------------------------------------------------------------------------
 /**
@@ -25,172 +28,178 @@ import student.TestCase;
  * @author Sean Meacham (sean22)
  * @author Tim Eck (etimot2)
  * @author Nate Tucker (imtucker)
- * @version 2012.04.07
+ * @version 2012.04.29
  */
 public class GroupProjectActivity
     extends Activity
 {
-    private Room             initRoom;
-    private Character        mainChar;
-    private ArrayList<NPC>   npcs;
-    private boolean          exploreRoom;
-    private SearchAction     search;
-    private FightAction      fight;
-    private ChangeRoomAction changeRoom;
-    private ApplyItemAction  applyItem;
-    private Room             curRoom = null;
-    private TextView         mainCharHP;
-    private TextView         mainCharDEF;
-    private TextView         mainCharATT;
-    private NPC              npc1;
+    private Room     room;
+
+    private TextView mainCharHP;
+    private TextView mainCharDEF;
+    private TextView mainCharATT;
+
+    private Spinner  actionSpinner;
+    private Spinner  itemSpinner;
+    private Context  context;
 
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        context = this;
+        setupInitialMap();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        if (curRoom == null)
-        {
-            initRoom = new Room();
-            curRoom = initRoom;
-        }
+        mainCharHP = (TextView)findViewById(R.id.mainCharHP);
+        mainCharDEF = (TextView)findViewById(R.id.mainCharDEF);
+        mainCharATT = (TextView)findViewById(R.id.mainCharATT);
+        updateStatusBars();
 
-        mainChar = new Character();
-        npc1 = new NPC();
-        npc1.setMessage("Remember to explore the room first!");
-        mainChar.setCharacterName("Main Character");
-        initRoom.setMainCharacter(mainChar);
+        actionSpinner = (Spinner)findViewById(R.id.actionSpinner);
+        actionSpinner
+            .setOnItemSelectedListener(new ActionSpinnerSelectedListener());
+        buildActionList();
 
-        TextView mainCharHP = (TextView)findViewById(R.id.mainCharHP);
-        mainCharHP.setText("HP: " + mainChar.getCharacterHealth());
-
-        TextView mainCharDEF = (TextView)findViewById(R.id.mainCharDEF);
-        mainCharDEF.setText("DEF: ");
-
-        TextView mainCharATT = (TextView)findViewById(R.id.mainCharATT);
-        mainCharATT.setText("ATT: ");
-
-        Spinner spinner1 = (Spinner)findViewById(R.id.actionSpinner);
-        ArrayAdapter<CharSequence> adapter =
-            ArrayAdapter.createFromResource(
-                this,
-                R.array.action_Array,
-                android.R.layout.simple_spinner_item);
-        adapter
-            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner1.setAdapter(adapter);
-        spinner1.setOnItemSelectedListener(new MyOnItemSelectedListener());
-
-        String secondarySpinner[] = new String[] { "Please select an action." };
-
-        Spinner spinner2 = (Spinner)findViewById(R.id.spinner2);
-        ArrayAdapter<String> adapter2 =
-            new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_spinner_item,
-                secondarySpinner);
-        adapter
-            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
-        spinner2.setOnItemSelectedListener(new MyOnItemSelectedListener());
-
+        itemSpinner = (Spinner)findViewById(R.id.objectsSpinner);
+        itemSpinner
+            .setOnItemSelectedListener(new ItemSpinnerSelectedListener());
+        buildStoredItemList();
     }
 
 
     /**
      * Sets up the conditions for the initial room
      */
-    private void firstRoomInit()
+    private void setupInitialMap()
     {
-        initRoom = new Room();
-        mainChar = new Character();
+        room = new Room();
+        room.addObserver(new RoomObserver());
+
+        Character mainChar = new Character();
         mainChar.setCharacterName("Main Character");
-        initRoom.setMainCharacter(mainChar);
-        NPC npc1 = new NPC();
-        npc1.setMessage("You must explore the room before you can take action!");
-        npcs.add(npc1);
-        initRoom.setNpcs(npcs);
+        SimpleWeapon weapon = new SimpleWeapon();
+        weapon.setDamage(5f);
+        weapon.setName("Sword");
+        mainChar.getEquippedItems().add(weapon);
+        room.setMainCharacter(mainChar);
+
+        NPC npc = new NPC();
+        npc.setCharacterName("Sage");
+        npc.setMessage("Remember to explore the room first!");
+        room.getNpcs().add(npc);
+        room.getCurrentActions().add(new TalkAction(npc));
+
+        npc = new NPC();
+        npc.setCharacterName("Warrior");
+        npc.setCharacterHealth(10f);
+        SimpleArmor armor = new SimpleArmor();
+        armor.setName("Sheild");
+        armor.setArmorValue(0.1f);
+        npc.getEquippedItems().add(armor);
+        room.getNpcs().add(npc);
+        room.getHiddenActions().add(new FightAction(npc));
+
+        room.getCurrentActions().add(new SearchAction());
     }
 
 
     /**
-     * // ----------------------------------------------------------------------
-     * --- /** Nested class to set OnClickListeners to the data items in the
-     * drop-down list and handle events.
-     *
-     * @author Sean Meacham
-     * @version Apr 28, 2012
+     * Updates the action list with the actions that are in the current room.
      */
-    public class MyOnItemSelectedListener
+    private void buildActionList()
+    {
+        ArrayAdapter<String> adapter =
+            new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        adapter.add("");
+        for (BaseAction action : room.getCurrentActions())
+        {
+            adapter.add(action.getDescription());
+        }
+        actionSpinner.setAdapter(adapter);
+    }
+
+
+    private void buildStoredItemList()
+    {
+        ArrayList<BaseAction> actions = new ArrayList<BaseAction>();
+
+        ArrayAdapter<String> adapter =
+            new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        adapter.add("");
+        for (BaseItem item : room.getMainCharacter().getEquippedItems())
+        {
+            adapter.add("use: " + item.getName());
+        }
+
+        for (BaseItem item : room.getMainCharacter().getStoredItems())
+        {
+            adapter.add("equip: " + item.getName());
+        }
+        itemSpinner.setAdapter(adapter);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Updates the status bar that display player information
+     */
+    public void updateStatusBars()
+    {
+        Character main = room.getMainCharacter();
+        float att = 0;
+        float def = 0;
+
+        for (BaseItem item : main.getEquippedItems())
+        {
+            if (item instanceof SimpleWeapon)
+            {
+                att = ((SimpleWeapon)item).getDamage();
+            }
+            else if (item instanceof SimpleArmor)
+            {
+                def = ((SimpleArmor)item).getArmorValue();
+            }
+        }
+
+        mainCharHP.setText("HP: " + main.getCharacterHealth());
+        mainCharDEF.setText("DEF: " + def);
+        mainCharATT.setText("ATT: " + att);
+    }
+
+
+    /**
+     * Nested class to set do a specific action when one is selected by the
+     * action spinner.
+     */
+    public class ActionSpinnerSelectedListener
         implements OnItemSelectedListener
     {
 
-        @SuppressWarnings("javadoc")
         public void onItemSelected(
             AdapterView<?> parent,
             View view,
             int pos,
             long id)
         {
-            if (!curRoom.getRoomState())
+            if (pos == 0 || pos > room.getCurrentActions().size())
             {
-                Toast.makeText(
-                    parent.getContext(),
-                    "You must explore the room first",
-                    Toast.LENGTH_LONG).show();
+                return;
             }
 
-            if (pos == 0)
+            BaseAction action = room.getCurrentActions().get(pos - 1);
+            if (action.applyAction(room))
             {
-                SearchAction search = new SearchAction();
-                search.applyAction(curRoom);
-                curRoom.setRoomState();
-                Toast.makeText(
-                    parent.getContext(),
-                    "The room has now been explored.",
-                    Toast.LENGTH_LONG).show();
-
-                // Creates a string for
-                String[] npcs = new String[curRoom.getNpcs().size()];
-
-                for(int i = 0; i < curRoom.getNpcs().size(); i++)
-                {
-                    String value = null;
-                    value = curRoom.getNpcs().get(i).toString();
-                    npcs[i] = value;
-                }
-
-
+                room.getCurrentActions().remove(action);
             }
-
-            if (pos == 1)
-            {
-                FightAction fight = new FightAction(npc1);
-                fight.applyAction(curRoom);
-                updateStatusBars();
-            }
-
-            if (pos == 2)
-            {
-                int index = 0;
-                changeRoom = new ChangeRoomAction(index);
-                changeRoom.applyAction(curRoom);
-            }
-
-            if (pos == 3)
-            {
-                Toast.makeText(parent.getContext(),
-                    npc1.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            if (pos == 4)
-            {
-
-                //ApplyItemAction applyItem = new ApplyActionItem(item);
-            }
+            buildActionList();
+            buildStoredItemList();
+            updateStatusBars();
         }
 
 
@@ -202,16 +211,79 @@ public class GroupProjectActivity
     }
 
 
-    public void updateStatusBars()
+    /**
+     * Nested class to set do a add or remove and item when it is selected.
+     */
+    public class ItemSpinnerSelectedListener
+        implements OnItemSelectedListener
     {
-        mainCharHP
-            .setText("" + curRoom.getMainCharacter().getCharacterHealth());
 
-        mainCharDEF.setText(""
-            + curRoom.getMainCharacter().getCharacterHealth());
+        public void onItemSelected(
+            AdapterView<?> parent,
+            View view,
+            int pos,
+            long id)
+        {
+            if (pos == 0)
+            {
+                return;
+            }
+            Character main = room.getMainCharacter();
+            pos--;
+            if (pos < main.getEquippedItems().size())
+            {
+                BaseItem item = main.getEquippedItems().get(pos);
+                if (item.applyItem(main))
+                {
+                    main.getEquippedItems().remove(item);
+                }
+            }
+            else
+            {
+                pos -= main.getEquippedItems().size();
+                BaseItem item = main.getStoredItems().get(pos);
+                if (item.applyItem(main))
+                {
+                    main.getEquippedItems().remove(item);
+                }
+            }
 
-        mainCharHP
-            .setText("" + curRoom.getMainCharacter().getCharacterHealth());
+            BaseAction action = room.getCurrentActions().get(pos - 1);
+            if (action.applyAction(room))
+            {
+                room.getCurrentActions().remove(action);
+            }
+            buildActionList();
+            buildStoredItemList();
+            updateStatusBars();
+        }
+
+
+        public void onNothingSelected(AdapterView<?> parent)
+        {
+            // Do nothing.
+        }
+
+    }
+
+
+    // -------------------------------------------------------------------------
+    /**
+     * The observer class for the room.
+     */
+    public class RoomObserver
+        implements Observer
+    {
+        public void update(Observable observered, Object param)
+        {
+            if (room.hasMessage())
+            {
+                Toast.makeText(context, room.getMessage(), Toast.LENGTH_LONG)
+                    .show();
+                room.eraseMessage();
+            }
+        }
+
     }
 
 }

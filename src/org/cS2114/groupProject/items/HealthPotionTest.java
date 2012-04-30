@@ -17,7 +17,6 @@ public class HealthPotionTest
     private HealthPotion potion;
     private Character    character;
     private String       name;
-    private String       itemType;
     private String       itemDescription;
 
 

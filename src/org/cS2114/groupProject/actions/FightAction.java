@@ -47,7 +47,7 @@ public class FightAction
     public String getDescription()
     {
         String description =
-            "Fight " + enemy.getCharacterName() + ", they have "
+            "Fight " + enemy.getCharacterName() + ", he has "
                 + enemy.getCharacterHealth() + " health points left";
 
         return description;
@@ -102,15 +102,17 @@ public class FightAction
 
         // Damages both characters.
         float damage =
-            enemyArmor.getArmorValue() * mainCharacterWeapon.getDamage();
+            (1 - enemyArmor.getArmorValue()) * mainCharacterWeapon.getDamage();
         enemy.setCharacterHealth(enemy.getCharacterHealth() - damage);
 
-        damage = mainCharacterArmor.getArmorValue() * enemyWeapon.getDamage();
+        damage =
+            (1 - mainCharacterArmor.getArmorValue()) * enemyWeapon.getDamage();
         mainCharacter.setCharacterHealth(mainCharacter.getCharacterHealth()
             - damage);
 
         if (enemy.getCharacterHealth() <= 0)
         {
+            room.getMainCharacter().getStoredItems().addAll(enemyItems);
             return true;
         }
         return false;

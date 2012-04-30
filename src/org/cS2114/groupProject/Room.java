@@ -23,6 +23,10 @@ public class Room
     private Room[]                linkedRooms;
     private boolean               explored;
 
+    private boolean               changeRoom;
+    private boolean               hasMessage;
+    private String                message;
+
 
     // ----------------------------------------------------------
     /**
@@ -36,6 +40,9 @@ public class Room
         npcs = new ArrayList<NPC>();
         linkedRooms = new Room[4];
         explored = false;
+
+        changeRoom = false;
+        hasMessage = false;
     }
 
 
@@ -59,11 +66,23 @@ public class Room
         this.currentActions = currentActions;
     }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the room state.
+     *
+     * @return true if the room has been explored.
+     */
     public boolean getRoomState()
     {
         return explored;
     }
 
+
+    // ----------------------------------------------------------
+    /**
+     * Sets the room as explored.
+     */
     public void setRoomState()
     {
         explored = true;
@@ -180,7 +199,62 @@ public class Room
         {
             return;
         }
+
+        changeRoom = true;
         setChanged();
         notifyObservers(nextRoom);
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Determines if the room should be changed.
+     *
+     * @return true if the room should be changed.
+     */
+    public boolean shouldChangeRoom()
+    {
+        return changeRoom;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Sets if the room should be changed or not.
+     *
+     * @param change
+     *            true to change.
+     */
+    public void setChangeRoom(boolean change)
+    {
+        changeRoom = change;
+    }
+
+
+    public boolean hasMessage()
+    {
+        return hasMessage;
+    }
+
+
+    public void eraseMessage()
+    {
+        message = "";
+        hasMessage = false;
+    }
+
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+
+    public void setMessage(String message)
+    {
+        this.message = message;
+        hasMessage = true;
+        setChanged();
+        notifyObservers();
     }
 }

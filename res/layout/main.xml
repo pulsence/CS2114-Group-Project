@@ -13,19 +13,17 @@
             android:id="@+id/actionSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" 
-            android:entries="@array/action_Array"
-            android:prompt="@string/action_prompt" />
+            android:layout_weight="1" />
 
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/objectsSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
     </LinearLayout>
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="400dp"
         android:src="@drawable/room" />
