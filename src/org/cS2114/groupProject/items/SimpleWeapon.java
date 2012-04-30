@@ -76,15 +76,16 @@ public class SimpleWeapon
         ArrayList<BaseItem> equippedItems = character.getEquippedItems();
         ArrayList<BaseItem> storedItems = character.getStoredItems();
 
-        for (int i = 0; i < 0; i++)
+        if (equippedItems.contains(this))
         {
-            if (equippedItems.get(i).getType() == ItemType.Weapon)
-            {
-                storedItems.add(equippedItems.get(i));
-                equippedItems.remove(i);
-            }
+            equippedItems.remove(this);
+            storedItems.add(this);
         }
-        equippedItems.add(this);
+        else
+        {
+            equippedItems.add(this);
+            storedItems.remove(this);
+        }
         return false;
     }
 

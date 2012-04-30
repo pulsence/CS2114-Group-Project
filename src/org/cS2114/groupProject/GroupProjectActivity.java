@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import org.cS2114.groupProject.actions.BaseAction;
@@ -18,6 +17,7 @@ import org.cS2114.groupProject.actions.FightAction;
 import org.cS2114.groupProject.actions.SearchAction;
 import org.cS2114.groupProject.actions.TalkAction;
 import org.cS2114.groupProject.items.BaseItem;
+import org.cS2114.groupProject.items.ItemType;
 import org.cS2114.groupProject.items.SimpleArmor;
 import org.cS2114.groupProject.items.SimpleWeapon;
 
@@ -126,7 +126,6 @@ public class GroupProjectActivity
 
     private void buildStoredItemList()
     {
-        ArrayList<BaseAction> actions = new ArrayList<BaseAction>();
 
         ArrayAdapter<String> adapter =
             new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
@@ -134,12 +133,28 @@ public class GroupProjectActivity
         adapter.add("");
         for (BaseItem item : room.getMainCharacter().getEquippedItems())
         {
-            adapter.add("use: " + item.getName());
+            if (item.getType() == ItemType.Armor
+                || item.getType() == ItemType.Weapon)
+            {
+                adapter.add("remove: " + item.getName());
+            }
+            else
+            {
+                adapter.add("use: " + item.getName());
+            }
         }
 
         for (BaseItem item : room.getMainCharacter().getStoredItems())
         {
-            adapter.add("equip: " + item.getName());
+            if (item.getType() == ItemType.Armor
+                || item.getType() == ItemType.Weapon)
+            {
+                adapter.add("equip: " + item.getName());
+            }
+            else
+            {
+                adapter.add("use: " + item.getName());
+            }
         }
         itemSpinner.setAdapter(adapter);
     }
@@ -245,13 +260,8 @@ public class GroupProjectActivity
                 if (item.applyItem(main))
                 {
                     main.getEquippedItems().remove(item);
+                    main.getStoredItems().remove(item);
                 }
-            }
-
-            BaseAction action = room.getCurrentActions().get(pos - 1);
-            if (action.applyAction(room))
-            {
-                room.getCurrentActions().remove(action);
             }
             buildActionList();
             buildStoredItemList();

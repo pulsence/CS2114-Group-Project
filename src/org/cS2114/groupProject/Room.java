@@ -231,12 +231,21 @@ public class Room
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * There is a message for the player.
+     * @return true is there is a message.
+     */
     public boolean hasMessage()
     {
         return hasMessage;
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Removes the message from this room.
+     */
     public void eraseMessage()
     {
         message = "";
@@ -244,12 +253,22 @@ public class Room
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Gets the message for this room.
+     * @return the message.
+     */
     public String getMessage()
     {
         return message;
     }
 
 
+    // ----------------------------------------------------------
+    /**
+     * Sets the message for the room.
+     * @param message to set.
+     */
     public void setMessage(String message)
     {
         this.message = message;
